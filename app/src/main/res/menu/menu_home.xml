@@ -1,0 +1,33 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_reset_baso"
+        android:orderInCategory="1"
+        android:title="@string/action_baso_reset"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_reset_eosino"
+        android:orderInCategory="2"
+        android:title="@string/action_eosino_reset"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_reset_mono"
+        android:orderInCategory="3"
+        android:title="@string/action_mono_reset"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_reset_lympho"
+        android:orderInCategory="4"
+        android:title="@string/action_lympho_reset"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_reset_neutro"
+        android:orderInCategory="5"
+        android:title="@string/action_neutro_reset"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_reset_all"
+        android:orderInCategory="5"
+        android:title="@string/action_all_reset"
+        app:showAsAction="ifRoom" />
+</menu>
