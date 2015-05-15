@@ -46,11 +46,12 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <Button
+    <TextView
+        android:id="@+id/total_count_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:drawableLeft="@android:drawable/ic_popup_sync"
-        android:text="@string/undo" />
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:text="Total Count: 000" />
 </RelativeLayout>

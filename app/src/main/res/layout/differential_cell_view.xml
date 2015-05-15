@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/cell_count_edit_text"
+        android:id="@+id/cell_count_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="00%" />
+        android:text="000" />
 
-    <Button
+    <ImageView
         android:id="@+id/cell_img"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Button"/>
+        android:layout_margin="10dp"
+        android:scaleType="centerCrop"
+        tools:background="@drawable/baso" />
 
     <TextView
         android:id="@+id/cell_title"

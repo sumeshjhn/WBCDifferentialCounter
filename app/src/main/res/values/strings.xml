@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">WBCDifferentialCounter</string>
     <string name="undo">Undo</string>
+    <string name="Baso">Baso</string>
+    <string name="Eosine">Eosine</string>
+    <string name="Mono">Mono</string>
+    <string name="Lympho">Lympho</string>
+    <string name="Neutro">Neutro</string>
+    <string name="total_count_format">Total Count: %03d</string>
+
     <string name="action_baso_reset">Reset Baso</string>
     <string name="action_eosino_reset">Reset Eosino</string>
     <string name="action_mono_reset">Reset Mono</string>
