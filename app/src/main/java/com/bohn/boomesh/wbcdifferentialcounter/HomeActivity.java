@@ -1,7 +1,6 @@
 package com.bohn.boomesh.wbcdifferentialcounter;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,7 +9,7 @@ import android.view.MenuItem;
 public class HomeActivity extends AppCompatActivity {
 
     public interface OptionsItemSelectedListener {
-        public void onOptionsItemSelected(HomeActivityFragment.WBC pCellType);
+        void onOptionsItemSelected(HomeActivityFragment.WBC pCellType);
     }
 
     private OptionsItemSelectedListener mOptionsItemSelectedListener;
@@ -41,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        HomeActivityFragment.WBC cellType = HomeActivityFragment.WBC.ALL;
+        HomeActivityFragment.WBC cellType;
 
         switch (id) {
             case R.id.action_reset_all:

@@ -21,8 +21,8 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
         NEUTRO(R.drawable.neutro, R.string.Neutro),
         ALL(0, 0);
 
-        public int mImageResourceId;
-        public int mStringResourceId;
+        public final int mImageResourceId;
+        public final int mStringResourceId;
 
         WBC(int pImgResId, int pStrResId) {
             mImageResourceId = pImgResId;
@@ -35,8 +35,6 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
     private final String KEY_MONO_COUNT = "MONO_COUNT";
     private final String KEY_LYMPHO_COUNT = "LYMPHO_COUNT";
     private final String KEY_NEUTRO_COUNT = "NEUTRO_COUNT";
-
-    private final int TOTAL_WBC_COUNT = 100;
 
     private TextView mTotalCountTxt;
     private View mBasoCellView;
@@ -159,6 +157,8 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
     }
 
     private void updateTotalCount() {
+        final int TOTAL_WBC_COUNT = 100;
+
         final int totalCount = mBasoCount + mEosCount + mMonoCount + mLymphoCount + mNeutroCount;
         final boolean isMaximumReached = totalCount == TOTAL_WBC_COUNT;
 
