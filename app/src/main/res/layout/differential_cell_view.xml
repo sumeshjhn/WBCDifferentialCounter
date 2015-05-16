@@ -10,7 +10,7 @@
         android:id="@+id/cell_count_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="000" />
+        android:text="@string/default_count_value" />
 
     <ImageView
         android:id="@+id/cell_img"

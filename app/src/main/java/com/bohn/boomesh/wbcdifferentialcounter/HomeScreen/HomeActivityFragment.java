@@ -1,4 +1,4 @@
-package com.bohn.boomesh.wbcdifferentialcounter.HomeScreen;
+package com.bohn.boomesh.wbcdifferentialcounter.homescreen;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +18,11 @@ import com.bohn.boomesh.wbcdifferentialcounter.models.WhiteBloodCell;
 import com.bohn.boomesh.wbcdifferentialcounter.models.WhiteBloodCell.WBCType;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class HomeActivityFragment extends Fragment implements HomeActivity.OptionsItemSelectedListener {
 
     private final String KEY_WBC_LIST = "WHITE_BLOOD_CELL_LIST";
+    private final String KEY_WBC_UNDO_STACK = "UNDO_STACK";
 
     private TextView mTotalCountTxt;
     private View mBasoCellView;
@@ -33,10 +32,20 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
     private View mNeutroCellView;
 
     private RecyclerView mWBCCountersRecyclerView;
-    private RecyclerView.Adapter mWBCCounterAdapter;
+    private WBCCounterAdapter mWBCCounterAdapter;
+    private final WBCCounterAdapter.OnItemClickedListener mOnItemClickedListener = new WBCCounterAdapter.OnItemClickedListener() {
+        @Override
+        public void onItemClicked(int pPosition, View pView) {
+            if (pPosition != RecyclerView.NO_POSITION) {
+                final WBCType type = mListOfWBC.get(pPosition).getType();
+                final TextView countTextView = (TextView) pView.findViewById(R.id.cell_count_text_view);
+                onCellClicked(type, countTextView);
+            }
+        }
+    };
 
     private ArrayList<WhiteBloodCell> mListOfWBC;
-    private final Stack<WhiteBloodCell> mUndoStack = new Stack<>();
+    private ArrayList<WhiteBloodCell> mUndoStack;
 
 
     @Override
@@ -46,6 +55,7 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
 
         if (savedInstanceState != null) {
             mListOfWBC = savedInstanceState.getParcelableArrayList(KEY_WBC_LIST);
+            mUndoStack = savedInstanceState.getParcelableArrayList(KEY_WBC_UNDO_STACK);
         } else {
             mListOfWBC = new ArrayList<WhiteBloodCell>() {
                 {
@@ -56,6 +66,7 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
                     add(new WhiteBloodCell(WBCType.NEUTRO));
                 }
             };
+            mUndoStack = new ArrayList<>();
         }
 
         mTotalCountTxt = (TextView) view.findViewById(R.id.total_count_textview);
@@ -78,28 +89,21 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
             mNeutroCellView = view.findViewById(R.id.neutro_cell);
             setupCellView(mNeutroCellView, WBCType.NEUTRO);
         } else {
-            mWBCCounterAdapter = new WBCCounterAdapter(mListOfWBC, new WBCCounterAdapter.OnItemClickedListener() {
-                @Override
-                public void onItemClicked(int pPosition, View pView) {
-                    if (pPosition != RecyclerView.NO_POSITION) {
-                        final WBCType type = mListOfWBC.get(pPosition).getType();
-                        final TextView countTextView = (TextView) pView.findViewById(R.id.cell_count_text_view);
-                        onCellClicked(type, countTextView);
-                    }
-                }
-            });
+            mWBCCounterAdapter = new WBCCounterAdapter(mListOfWBC, mOnItemClickedListener);
 
             mWBCCountersRecyclerView.setHasFixedSize(true);
             mWBCCountersRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             mWBCCountersRecyclerView.setAdapter(mWBCCounterAdapter);
         }
+        updateTotalCount();
         return view;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(KEY_WBC_LIST, mListOfWBC);
-        //TODO: save Undo stack
+        outState.putParcelableArrayList(KEY_WBC_UNDO_STACK, mUndoStack);
+
         super.onSaveInstanceState(outState);
     }
 
@@ -149,7 +153,7 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
 
     private void onCellClicked(WBCType pCellType, TextView pCellCountEditText) {
         final WhiteBloodCell whiteBloodCell = getCell(pCellType);
-        mUndoStack.push(new WhiteBloodCell(whiteBloodCell));
+        mUndoStack.add(new WhiteBloodCell(whiteBloodCell));
 
         int cellCount = whiteBloodCell.getCount();
         whiteBloodCell.setCount(++cellCount);
@@ -165,8 +169,8 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
             totalCount += wbc.getCount();
         }
 
-        final boolean isMaximumReached = totalCount == TOTAL_WBC_COUNT;
-        mTotalCountTxt.setText(String.format(getString(R.string.total_count_format), isMaximumReached ? TOTAL_WBC_COUNT : totalCount));
+        final boolean isMaximumReached = totalCount >= TOTAL_WBC_COUNT;
+        mTotalCountTxt.setText(String.format(getString(R.string.total_count_format), totalCount));
 
         if (mWBCCountersRecyclerView == null) {
             mBasoCellView.setEnabled(!isMaximumReached);
@@ -175,7 +179,7 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
             mLymphoCellView.setEnabled(!isMaximumReached);
             mNeutroCellView.setEnabled(!isMaximumReached);
         } else {
-            mWBCCountersRecyclerView.setEnabled(!isMaximumReached);
+            mWBCCounterAdapter.setItemClickedListener(isMaximumReached ? null : mOnItemClickedListener);
         }
     }
 
@@ -187,7 +191,7 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
                 break;
             case R.id.action_undo:
                 if (!mUndoStack.isEmpty()) {
-                    final WhiteBloodCell prevWBC = mUndoStack.pop();
+                    final WhiteBloodCell prevWBC = mUndoStack.remove(mUndoStack.size() - 1);
                     for (WhiteBloodCell wbc : mListOfWBC) {
                         if (wbc.getType().equals(prevWBC.getType())) {
                             wbc.setCount(prevWBC.getCount());
@@ -227,10 +231,10 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
     }
 
     /**
-     * used for in the landscape orientation
+     * used for in the landscape layout
      *
-     * @param pCellType
-     * @param pCount
+     * @param pCellType of type WBCType in WhiteBloodCell
+     * @param pCount    the integer valyout you would like the count textview in the landscape layout to be
      */
     private void updateCounterWithCellType(WBCType pCellType, int pCount) {
         if (mBasoCellView == null || mEosineCellView == null || mMonoCellView == null || mLymphoCellView == null || mNeutroCellView == null) {

@@ -8,10 +8,8 @@
     <string name="Neutro">Neutro</string>
     <string name="total_count_format">Total Count: %03d</string>
 
-    <string name="action_baso_reset">Reset Baso</string>
-    <string name="action_eosino_reset">Reset Eosino</string>
-    <string name="action_mono_reset">Reset Mono</string>
-    <string name="action_lympho_reset">Reset Lympho</string>
-    <string name="action_neutro_reset">Reset Neutro</string>
+    <string name="default_total_count_text">Total Count: 000</string>
+    <string name="default_count_value">000</string>
+
     <string name="action_all_reset">Reset All</string>
 </resources>

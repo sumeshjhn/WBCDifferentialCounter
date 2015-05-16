@@ -5,9 +5,6 @@ import android.os.Parcelable;
 
 import com.bohn.boomesh.wbcdifferentialcounter.R;
 
-/**
- * Created by Sumesh on 15-05-16.
- */
 public class WhiteBloodCell implements Parcelable {
     public enum WBCType {
         BASO(R.drawable.baso, R.string.Baso),
@@ -26,7 +23,7 @@ public class WhiteBloodCell implements Parcelable {
         }
     }
 
-    private WBCType mType;
+    private final WBCType mType;
 
     private int mCount;
 
@@ -35,7 +32,7 @@ public class WhiteBloodCell implements Parcelable {
         mCount = 0;
     }
 
-    public WhiteBloodCell(WBCType pType, int pCount) {
+    private WhiteBloodCell(WBCType pType, int pCount) {
         mType = pType;
         mCount = pCount;
     }

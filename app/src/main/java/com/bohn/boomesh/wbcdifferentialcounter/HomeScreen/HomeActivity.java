@@ -1,4 +1,4 @@
-package com.bohn.boomesh.wbcdifferentialcounter.HomeScreen;
+package com.bohn.boomesh.wbcdifferentialcounter.homescreen;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

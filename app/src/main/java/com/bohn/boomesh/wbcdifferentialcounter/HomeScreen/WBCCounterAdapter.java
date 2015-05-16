@@ -1,10 +1,9 @@
-package com.bohn.boomesh.wbcdifferentialcounter.HomeScreen;
+package com.bohn.boomesh.wbcdifferentialcounter.homescreen;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,16 +12,13 @@ import com.bohn.boomesh.wbcdifferentialcounter.models.WhiteBloodCell;
 
 import java.util.List;
 
-/**
- * Created by Sumesh on 15-05-16.
- */
 public class WBCCounterAdapter extends RecyclerView.Adapter<WBCCounterAdapter.ViewHolder> {
 
     public interface OnItemClickedListener {
         void onItemClicked(int pPosition, View pView);
     }
 
-    private List<WhiteBloodCell> mListOfWBC;
+    private final List<WhiteBloodCell> mListOfWBC;
     private OnItemClickedListener mItemClickedListener;
 
     public WBCCounterAdapter(List<WhiteBloodCell> pList, OnItemClickedListener pListener) {
@@ -33,8 +29,7 @@ public class WBCCounterAdapter extends RecyclerView.Adapter<WBCCounterAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.differential_cell_view, parent, false);
-        final ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -54,11 +49,15 @@ public class WBCCounterAdapter extends RecyclerView.Adapter<WBCCounterAdapter.Vi
         return mListOfWBC.size();
     }
 
+    public void setItemClickedListener(OnItemClickedListener pListener) {
+        mItemClickedListener = pListener;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView mCounterTextView;
-        public ImageView mCellImageView;
-        public TextView mCellNameTextView;
+        public final TextView mCounterTextView;
+        public final ImageView mCellImageView;
+        public final TextView mCellNameTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -66,10 +65,6 @@ public class WBCCounterAdapter extends RecyclerView.Adapter<WBCCounterAdapter.Vi
             mCellImageView = (ImageView) itemView.findViewById(R.id.cell_img);
             mCellNameTextView = (TextView) itemView.findViewById(R.id.cell_title);
             itemView.setOnClickListener(this);
-        }
-
-        public void setOnItemClickListener(OnItemClickedListener pListener) {
-            mItemClickedListener = pListener;
         }
 
         @Override
