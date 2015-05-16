@@ -9,7 +9,7 @@ import android.view.MenuItem;
 public class HomeActivity extends AppCompatActivity {
 
     public interface OptionsItemSelectedListener {
-        void onOptionsItemSelected(HomeActivityFragment.WBC pCellType);
+        void onOptionsItemSelected(int pMenuItem);
     }
 
     private OptionsItemSelectedListener mOptionsItemSelectedListener;
@@ -40,33 +40,19 @@ public class HomeActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        HomeActivityFragment.WBC cellType;
-
         switch (id) {
             case R.id.action_reset_all:
-                cellType = HomeActivityFragment.WBC.ALL;
+                // fragment handles it
                 break;
-            case R.id.action_reset_baso:
-                cellType = HomeActivityFragment.WBC.BASO;
-                break;
-            case R.id.action_reset_eosino:
-                cellType = HomeActivityFragment.WBC.EOSINE;
-                break;
-            case R.id.action_reset_mono:
-                cellType = HomeActivityFragment.WBC.MONO;
-                break;
-            case R.id.action_reset_lympho:
-                cellType = HomeActivityFragment.WBC.LYMPHO;
-                break;
-            case R.id.action_reset_neutro:
-                cellType = HomeActivityFragment.WBC.NEUTRO;
+            case R.id.action_undo:
+                // fragment handles it
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
         if (mOptionsItemSelectedListener != null) {
-            mOptionsItemSelectedListener.onOptionsItemSelected(cellType);
+            mOptionsItemSelectedListener.onOptionsItemSelected(id);
         }
 
         return true;
