@@ -56,6 +56,9 @@ public class WhiteBloodCell implements Parcelable {
         mCount = pCount;
     }
 
+    public static String getFormattedCellCount(int cellCount) {
+        return String.format("%03d", cellCount);
+    }
 
     /*
         Parcelable methods

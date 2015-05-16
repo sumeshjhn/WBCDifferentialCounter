@@ -1,9 +1,11 @@
-package com.bohn.boomesh.wbcdifferentialcounter;
+package com.bohn.boomesh.wbcdifferentialcounter.HomeScreen;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.bohn.boomesh.wbcdifferentialcounter.R;
 
 
 public class HomeActivity extends AppCompatActivity {
