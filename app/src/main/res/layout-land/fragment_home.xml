@@ -47,6 +47,12 @@
             android:layout_weight="1" />
     </LinearLayout>
 
+    <View
+        android:id="@+id/max_count_reached_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/total_count_textview"
         android:layout_width="wrap_content"
@@ -55,4 +61,5 @@
         android:layout_alignParentRight="true"
         android:layout_margin="10dp"
         android:text="@string/default_total_count_text" />
+
 </RelativeLayout>

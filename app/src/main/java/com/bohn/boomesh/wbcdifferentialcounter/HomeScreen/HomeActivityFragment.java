@@ -1,6 +1,7 @@
 package com.bohn.boomesh.wbcdifferentialcounter.homescreen;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
     private View mMonoCellView;
     private View mLymphoCellView;
     private View mNeutroCellView;
+    private View mMaxCountReachedView;
 
     private RecyclerView mWBCCountersRecyclerView;
     private WBCCounterAdapter mWBCCounterAdapter;
@@ -71,6 +73,23 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
 
         mTotalCountTxt = (TextView) view.findViewById(R.id.total_count_textview);
         mWBCCountersRecyclerView = (RecyclerView) view.findViewById(R.id.counter_recycler_view);
+
+        mMaxCountReachedView = view.findViewById(R.id.max_count_reached_view);
+        mMaxCountReachedView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final MediaPlayer mCoinSound = MediaPlayer.create(getActivity(), R.raw.coin__timgormly__8bitcoin);
+                mCoinSound.start();
+                mCoinSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        if (mp != null) {
+                            mp.release();
+                        }
+                    }
+                });
+            }
+        });
 
         if (mWBCCountersRecyclerView == null) {
 
@@ -152,6 +171,17 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
     }
 
     private void onCellClicked(WBCType pCellType, TextView pCellCountEditText) {
+        final MediaPlayer mClickSound = MediaPlayer.create(getActivity(), pCellType.mClickSoundResourceId);
+        mClickSound.start();
+        mClickSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                if (mp != null) {
+                    mp.release();
+                }
+            }
+        });
+
         final WhiteBloodCell whiteBloodCell = getCell(pCellType);
         mUndoStack.add(new WhiteBloodCell(whiteBloodCell));
 
@@ -171,6 +201,7 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
 
         final boolean isMaximumReached = totalCount >= TOTAL_WBC_COUNT;
         mTotalCountTxt.setText(String.format(getString(R.string.total_count_format), totalCount));
+        mMaxCountReachedView.setVisibility(isMaximumReached ? View.VISIBLE : View.GONE);
 
         if (mWBCCountersRecyclerView == null) {
             mBasoCellView.setEnabled(!isMaximumReached);

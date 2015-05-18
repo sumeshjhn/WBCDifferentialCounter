@@ -7,19 +7,21 @@ import com.bohn.boomesh.wbcdifferentialcounter.R;
 
 public class WhiteBloodCell implements Parcelable {
     public enum WBCType {
-        BASO(R.drawable.baso, R.string.Baso),
-        EOSINE(R.drawable.eosine, R.string.Eosine),
-        MONO(R.drawable.mono, R.string.Mono),
-        LYMPHO(R.drawable.lympho, R.string.Lympho),
-        NEUTRO(R.drawable.neutro, R.string.Neutro),
-        ALL(0, 0);
+        BASO(R.drawable.baso, R.string.Baso, R.raw.btn1_fins__button5),
+        EOSINE(R.drawable.eosine, R.string.Eosine, R.raw.btn2_fins__button),
+        MONO(R.drawable.mono, R.string.Mono, R.raw.btn3_fins__gamemenuclick),
+        LYMPHO(R.drawable.lympho, R.string.Lympho, R.raw.btn4_junggle__btn232),
+        NEUTRO(R.drawable.neutro, R.string.Neutro, R.raw.btn5__greencouch__beeps5),
+        ALL(0, 0, 0);
 
         public final int mImageResourceId;
         public final int mStringResourceId;
+        public final int mClickSoundResourceId;
 
-        WBCType(int pImgResId, int pStrResId) {
+        WBCType(int pImgResId, int pStrResId, int pClickSoundResourceId) {
             mImageResourceId = pImgResId;
             mStringResourceId = pStrResId;
+            mClickSoundResourceId = pClickSoundResourceId;
         }
     }
 
