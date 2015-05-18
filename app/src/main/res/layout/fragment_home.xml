@@ -27,5 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="10dp"
-        android:text="@string/default_total_count_text" />
+        android:text="@string/default_total_count_text"
+        android:textSize="@dimen/total_count_sp" />
 </LinearLayout>
