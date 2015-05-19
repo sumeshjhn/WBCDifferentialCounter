@@ -1,5 +1,7 @@
 package com.bohn.boomesh.wbcdifferentialcounter.homescreen;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -11,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,11 +23,15 @@ import com.bohn.boomesh.wbcdifferentialcounter.models.WhiteBloodCell;
 import com.bohn.boomesh.wbcdifferentialcounter.models.WhiteBloodCell.WBCType;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HomeActivityFragment extends Fragment implements HomeActivity.OptionsItemSelectedListener {
 
     private final String KEY_WBC_LIST = "WHITE_BLOOD_CELL_LIST";
     private final String KEY_WBC_UNDO_STACK = "UNDO_STACK";
+
+    private Animation mMaxCountAnim;
+    private final AtomicBoolean mIsMaxCountAnimEnded = new AtomicBoolean(true);
 
     private TextView mTotalCountTxt;
     private View mBasoCellView;
@@ -49,7 +57,6 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
     private ArrayList<WhiteBloodCell> mListOfWBC;
     private ArrayList<WhiteBloodCell> mUndoStack;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,6 +78,7 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
             mUndoStack = new ArrayList<>();
         }
 
+
         mTotalCountTxt = (TextView) view.findViewById(R.id.total_count_textview);
         mWBCCountersRecyclerView = (RecyclerView) view.findViewById(R.id.counter_recycler_view);
 
@@ -88,11 +96,12 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
                         }
                     }
                 });
+
+                animateMaxCountReached();
             }
         });
 
         if (mWBCCountersRecyclerView == null) {
-
             mBasoCellView = view.findViewById(R.id.baso_cell);
             setupCellView(mBasoCellView, WBCType.BASO);
 
@@ -108,14 +117,61 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
             mNeutroCellView = view.findViewById(R.id.neutro_cell);
             setupCellView(mNeutroCellView, WBCType.NEUTRO);
         } else {
-            mWBCCounterAdapter = new WBCCounterAdapter(mListOfWBC, mOnItemClickedListener);
-
             mWBCCountersRecyclerView.setHasFixedSize(true);
             mWBCCountersRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        }
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (mWBCCountersRecyclerView == null) {
+            mBasoCellView = view.findViewById(R.id.baso_cell);
+            setupCellView(mBasoCellView, WBCType.BASO);
+
+            mEosineCellView = view.findViewById(R.id.eosino_cell);
+            setupCellView(mEosineCellView, WBCType.EOSINE);
+
+            mMonoCellView = view.findViewById(R.id.mono_cell);
+            setupCellView(mMonoCellView, WBCType.MONO);
+
+            mLymphoCellView = view.findViewById(R.id.lympho_cell);
+            setupCellView(mLymphoCellView, WBCType.LYMPHO);
+
+            mNeutroCellView = view.findViewById(R.id.neutro_cell);
+            setupCellView(mNeutroCellView, WBCType.NEUTRO);
+        }
+
+        if (mWBCCountersRecyclerView != null) {
+            mWBCCounterAdapter = new WBCCounterAdapter(mListOfWBC, mOnItemClickedListener);
             mWBCCountersRecyclerView.setAdapter(mWBCCounterAdapter);
         }
+
         updateTotalCount();
-        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mMaxCountAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.max_count_bounce);
+        mMaxCountAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mIsMaxCountAnimEnded.set(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mIsMaxCountAnimEnded.set(true);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                //do nothing
+            }
+        });
     }
 
     @Override
@@ -212,6 +268,10 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
         } else {
             mWBCCounterAdapter.setItemClickedListener(isMaximumReached ? null : mOnItemClickedListener);
         }
+
+        if (isMaximumReached) {
+            animateMaxCountReached();
+        }
     }
 
     @Override
@@ -239,6 +299,15 @@ public class HomeActivityFragment extends Fragment implements HomeActivity.Optio
                 break;
             default:
                 throw new IllegalArgumentException("unknown menu option clicked");
+        }
+    }
+
+    private void animateMaxCountReached() {
+        if (mMaxCountAnim != null && mIsMaxCountAnimEnded.get()) {
+            AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.max_count_color_animator);
+            set.setTarget(mTotalCountTxt);
+            set.start();
+            mTotalCountTxt.startAnimation(mMaxCountAnim);
         }
     }
 
